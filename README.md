@@ -11,13 +11,13 @@ This repository implements secure ingress gateways with custom authorization con
 
 ```mermaid
 graph TD
-    subgraph Cloud Run Target
+    subgraph "Cloud Run Target"
         CR_Client[Client] -->|HTTPS| CR_ALB[Global Load Balancer]
         CR_ALB -->|ext_proc / ext_authz| CR_Authz[Custom Authz Cloud Run]
         CR_ALB -->|Forward ALLOWED| CR_Agent[ReAct Agent Backend]
     end
 
-    subgraph Agent Runtime Target (Two-Tier)
+    subgraph "Agent Runtime Target (Two-Tier)"
         RT_Client[Client] -->|HTTPS| RT_ALB_T1[Tier 1 Global ALB]
         RT_ALB_T1 -->|ext_proc| RT_Authz[Custom Authz Cloud Run]
         RT_ALB_T1 -->|PSC NEG| RT_Attachment[PSC Service Attachment]
