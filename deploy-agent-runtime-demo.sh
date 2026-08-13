@@ -42,6 +42,13 @@ echo "gRPC Extension URL: $AUTHZ_URL"
 echo "Deploying custom-authz-demo-agent to Vertex AI Agent Runtime..."
 cd agents/custom-authz-demo-agent
 
+# Build virtual environment and sync dependencies
+echo "Building virtual environment and syncing dependencies..."
+uv venv
+source .venv/bin/activate
+uv sync
+agents-cli install
+
 # Ensure dependencies are installed and run deploy
 agents-cli deploy --project $PROJECT_ID --region $REGION --no-confirm-project
 

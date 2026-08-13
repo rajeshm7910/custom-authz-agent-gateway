@@ -43,6 +43,13 @@ echo "gRPC Extension URL: $AUTHZ_URL"
 echo "Deploying agent to Cloud Run..."
 cd agents/custom-authz-demo-agent
 
+# Build virtual environment and sync dependencies
+echo "Building virtual environment and syncing dependencies..."
+uv venv
+source .venv/bin/activate
+uv sync
+agents-cli install
+
 # Deploy using agents-cli to Cloud Run
 agents-cli deploy --deployment-target cloud_run --project $PROJECT_ID --region $REGION --service-name $BACKEND_SERVICE_NAME --no-confirm-project
 
