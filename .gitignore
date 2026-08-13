@@ -1,0 +1,54 @@
+# Python Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+lib/
+lib64/
+bin/
+include/
+share/
+
+# Python Cache & Build Artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+build/
+dist/
+*.egg-info/
+
+# Local Environment Variables & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# Terraform Files & State
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+terraform.tfvars
+.terraform.lock.hcl
+
+# Local Deployment Metadata
+deployment_metadata.json
+
+# Logs & Runtime Traces
+*.log
+logs/
+.system_generated/
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db

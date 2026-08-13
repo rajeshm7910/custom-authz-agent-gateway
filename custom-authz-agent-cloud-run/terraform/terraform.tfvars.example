@@ -1,0 +1,12 @@
+project_id              = "my-gcp-project-id"
+region                  = "us-central1"
+network_name            = "custom-authz-agent-vpc"
+authz_service_name      = "custom-authz-cloud-run"
+authz_container_image   = "gcr.io/my-gcp-project-id/custom-authz-cloud-run:latest"
+backend_service_name    = "adk-agent-app"
+backend_container_image = "gcr.io/my-gcp-project-id/adk-agent-app:latest"
+target_api_url          = "https://apigee.googleapis.com/v1/organizations/my-org/environments/prod/authz:evaluate"
+target_api_key          = "secret-apigee-api-key"
+fail_open               = false
+primary_domain          = "agent.example.com"
+enable_cloud_armor      = true

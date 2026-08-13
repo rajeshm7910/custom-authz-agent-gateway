@@ -1,0 +1,14 @@
+name: projects/ai-practice-489716/locations/global/authzExtensions/agw-ingress-custom-authz-ext
+description: Global Agent Gateway Custom Authorization Extension calling External Policy API
+loadBalancingScheme: EXTERNAL_MANAGED
+service: projects/622260204773/global/backendServices/custom-authz-agent-gateway-global-backend
+authority: custom-authz-agent-gateway
+timeout: 2s
+failOpen: false
+wireFormat: EXT_AUTHZ_GRPC
+forwardHeaders:
+- authorization
+- x-agent-id
+- x-agent-tool-name
+- x-agent-tenant-id
+- x-request-id

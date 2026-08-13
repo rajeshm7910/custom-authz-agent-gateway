@@ -1,0 +1,10 @@
+name: projects/ai-practice-489716/locations/us-central1/authzPolicies/agw-ingress-custom-authz-policy
+action: CUSTOM
+customProvider:
+  authzExtension:
+    resources:
+    - projects/ai-practice-489716/locations/us-central1/authzExtensions/custom-authz-agent-gateway-ext
+policyProfile: REQUEST_AUTHZ
+target:
+  resources:
+  - projects/ai-practice-489716/locations/us-central1/agentGateways/agw-ingress

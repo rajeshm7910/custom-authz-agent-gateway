@@ -1,0 +1,13 @@
+name: projects/ai-practice-489716/locations/us-central1/authzExtensions/custom-authz-agent-gateway-ext
+description: GCP Agent Gateway Custom Authorization Extension calling External Policy API
+service: custom-authz-agent-gateway-622260204773.us-central1.run.app
+authority: custom-authz-agent-gateway
+timeout: 2s
+failOpen: false
+wireFormat: EXT_AUTHZ_GRPC
+forwardHeaders:
+- authorization
+- x-agent-id
+- x-agent-tool-name
+- x-agent-tenant-id
+- x-request-id

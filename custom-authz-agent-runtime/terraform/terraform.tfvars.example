@@ -1,0 +1,7 @@
+project_id      = "your-gcp-project-id"
+region          = "us-central1"
+service_name    = "custom-authz-agent-gateway"
+container_image = "gcr.io/your-gcp-project-id/custom-authz-agent-gateway:latest"
+target_api_url  = "https://8.233.68.61.nip.io/custom-security"
+target_api_key  = "secret_api_key_12345"
+fail_open       = false
