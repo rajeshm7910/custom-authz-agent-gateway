@@ -1,0 +1,19 @@
+# GCP Service Extension LB Traffic Extension resource definition
+# Intercepts Request Headers, Request Body, and Response Body
+name: projects/${PROJECT_ID}/locations/global/lbTrafficExtensions/grpc-echo-extension
+forwardingRules:
+  - https://www.googleapis.com/compute/v1/projects/${PROJECT_ID}/global/forwardingRules/${FORWARDING_RULE_NAME}
+extensionChains:
+  - name: "grpc-echo-chain"
+    matchCondition:
+      celExpression: "true"
+    extensions:
+      - name: "grpc-echo-proc"
+        authority: "${SERVICE_HOST}"
+        service: "https://www.googleapis.com/compute/v1/projects/${PROJECT_ID}/locations/global/backendServices/${BACKEND_SERVICE_NAME}"
+        timeout: 1.0s
+        failOpen: false
+        supportedEvents:
+          - REQUEST_HEADERS
+          - REQUEST_BODY
+          - RESPONSE_BODY

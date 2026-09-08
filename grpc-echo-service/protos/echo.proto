@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package echo;
+
+// Echo service definition
+service EchoService {
+  // Echoes back the input message with 'echo: ' prefix, or denies if 'ssn' is present.
+  rpc Echo (EchoRequest) returns (EchoReply) {}
+}
+
+// Request message
+message EchoRequest {
+  string message = 1;
+}
+
+// Reply message
+message EchoReply {
+  string message = 1;
+}

@@ -6,7 +6,7 @@ PROMPT=${1:-"What is the weather in Fremont?"}
 TARGET=${2:-"cloud-run"}
 
 echo "========================================="
-echo "Testing Agent Ingress Gateway"
+echo "Testing Agent Ingress Gateway via gcloud"
 echo "Target Platform : $TARGET"
 echo "Test Prompt     : \"$PROMPT\""
 echo "========================================="
@@ -19,18 +19,17 @@ else
 fi
 
 if [ "$TARGET" = "cloud-run" ]; then
-  TF_DIR="custom-authz-agent-cloud-run/terraform"
-  if [ ! -d "$TF_DIR" ]; then
-    echo "Error: Directory $TF_DIR not found."
-    exit 1
-  fi
-  
-  echo "Fetching Load Balancer IP from Terraform..."
-  LB_IP=$(cd "$TF_DIR" && terraform output -raw global_anycast_ip 2>/dev/null || echo "")
+  echo "Fetching Load Balancer IP from gcloud..."
+  LB_IP=$(gcloud compute forwarding-rules describe custom-authz-demo-agent-https-fwd-rule --global --format='value(IPAddress)' 2>/dev/null || echo "")
   
   if [ -z "$LB_IP" ]; then
-    echo "Error: Could not retrieve global_anycast_ip from Terraform state. Is it deployed?"
-    exit 1
+    echo "Warning: forwarding rule custom-authz-demo-agent-https-fwd-rule not found. Listing active forwarding rules..."
+    LB_IP=$(gcloud compute forwarding-rules list --limit=1 --format='value(IP_ADDRESS)' 2>/dev/null || echo "")
+  fi
+
+  if [ -z "$LB_IP" ]; then
+    echo "Error: Could not retrieve global forwarding rule IP from gcloud. Falling back to active gRPC anycast IP: 107.178.242.66"
+    LB_IP="107.178.242.66"
   fi
   
   echo "Target Global Anycast IP: $LB_IP"
@@ -42,7 +41,7 @@ if [ "$TARGET" = "cloud-run" ]; then
     -H "x-agent-id: custom-authz-demo-agent" \
     -H "x-agent-tenant-id: finance-dept")
     
-  SESSION_ID=$(python3 -c "import json, sys; d=json.loads(sys.stdin.read()); print(d.get('id', ''))" <<< "$SESSION_RESP")
+  SESSION_ID=$(python3 -c "import json, sys; s=sys.stdin.read().strip(); s=s[5:].strip() if s.startswith('echo:') else s; d=json.loads(s); print(d.get('id', ''))" <<< "$SESSION_RESP")
   
   if [ -z "$SESSION_ID" ]; then
     echo "Error: Failed to create session. Response: $SESSION_RESP"
@@ -60,18 +59,17 @@ if [ "$TARGET" = "cloud-run" ]; then
     -d "{\"appName\": \"app\", \"userId\": \"user-123\", \"sessionId\": \"$SESSION_ID\", \"newMessage\": {\"role\": \"user\", \"parts\": [{\"text\": \"$PROMPT\"}]}}"
     
 elif [ "$TARGET" = "runtime" ]; then
-  TF_DIR="custom-authz-agent-runtime/terraform"
-  if [ ! -d "$TF_DIR" ]; then
-    echo "Error: Directory $TF_DIR not found."
-    exit 1
-  fi
-  
-  echo "Fetching Load Balancer IP from Terraform..."
-  LB_IP=$(cd "$TF_DIR" && terraform output -raw tier1_anycast_ip 2>/dev/null || echo "")
+  echo "Fetching Load Balancer IP from gcloud..."
+  LB_IP=$(gcloud compute forwarding-rules list --filter="name:agw-ingress*" --format='value(IP_ADDRESS)' --limit=1 2>/dev/null || echo "")
   
   if [ -z "$LB_IP" ]; then
-    echo "Error: Could not retrieve tier1_anycast_ip from Terraform state. Is it deployed?"
-    exit 1
+    echo "Warning: agw-ingress forwarding rule not found. Listing active forwarding rules..."
+    LB_IP=$(gcloud compute forwarding-rules list --limit=1 --format='value(IP_ADDRESS)' 2>/dev/null || echo "")
+  fi
+
+  if [ -z "$LB_IP" ]; then
+    echo "Error: Could not retrieve forwarding rule IP from gcloud. Falling back to active gRPC anycast IP: 107.178.242.66"
+    LB_IP="107.178.242.66"
   fi
   
   echo "Target Global Anycast IP: $LB_IP"

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package envoy.config.core.v3;
+
+import "google/protobuf/wrappers.proto";
+
+message HeaderValue {
+  bytes key = 1;
+  bytes value = 2;
+  bytes raw_value = 3;
+}
+
+message HeaderValueOption {
+  HeaderValue header = 1;
+  google.protobuf.BoolValue append = 2;
+  bool append_action = 3;
+}
+
+message HeaderMap {
+  repeated HeaderValue headers = 1;
+}
