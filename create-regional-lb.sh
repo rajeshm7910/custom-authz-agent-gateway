@@ -321,6 +321,7 @@ extensionChains:
         supportedEvents:
           - REQUEST_HEADERS
           - REQUEST_BODY
+          - RESPONSE_HEADERS
           - RESPONSE_BODY
 EOF
 
